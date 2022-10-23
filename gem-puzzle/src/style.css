@@ -1,0 +1,36 @@
+
+
+.canvas {
+    top: 70px;
+    left: 400px;
+    color: white;
+    background-color:burlywood;
+    position: relative;
+}
+
+.stroke {
+    font-size: 24px;
+    color: white;
+}
+
+
+
+.buttons__container {
+    display: flex;
+    justify-content: space-between;
+    top: 50px;
+    left: 400px;
+    width: 600px;
+    height: 50px;
+    border: black solid 1px;
+    position: relative;
+}
+
+.button {
+    width: 100px;
+    height: inherit;
+    background-color: darkcyan;
+    color: white;
+    border-radius: 20%;
+    cursor: pointer;
+}
