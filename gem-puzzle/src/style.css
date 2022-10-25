@@ -1,8 +1,20 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
+.content__box {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 500px;
+    height: 700px;
+}
 
 .canvas {
-    top: 70px;
-    left: 400px;
+    width: inherit;
+    height: 500px;
     color: white;
     background-color:burlywood;
     position: relative;
@@ -13,16 +25,11 @@
     color: white;
 }
 
-
-
 .buttons__container {
     display: flex;
     justify-content: space-between;
-    top: 50px;
-    left: 400px;
-    width: 600px;
-    height: 50px;
-    border: black solid 1px;
+    width: 500px;
+    height: 30px;
     position: relative;
 }
 
@@ -32,5 +39,84 @@
     background-color: darkcyan;
     color: white;
     border-radius: 20%;
+    cursor: pointer;
+}
+
+.count__box {
+    display: flex;
+    width: inherit;
+    height: 30px;
+}
+
+.moves__container {
+    width: 50%;
+    height: inherit;
+    text-align: center;
+}
+
+.time__container {
+    width: 50%;
+    height: inherit;
+    text-align: center;
+}
+
+.current__size__box {
+    width: inherit;
+    height: 30px;
+    text-align: center;
+}
+
+.sizes__box {
+    display: flex;
+    justify-content: space-between;
+    width: inherit;
+    height: 30px;
+}
+
+.sizes__choice {
+    width: 30%;
+    height: inherit;
+    text-align: center;
+}
+
+.size__instance__3x3 {
+    width: 10%;
+    height: inherit;
+    text-align: center;
+    cursor: pointer;
+}
+
+.size__instance__4x4 {
+    width: 10%;
+    height: inherit;
+    text-align: center;
+    cursor: pointer;
+}
+
+.size__instance__5x5 {
+    width: 10%;
+    height: inherit;
+    text-align: center;
+    cursor: pointer;
+}
+
+.size__instance__6x6 {
+    width: 10%;
+    height: inherit;
+    text-align: center;
+    cursor: pointer;
+}
+
+.size__instance__7x7 {
+    width: 10%;
+    height: inherit;
+    text-align: center;
+    cursor: pointer;
+}
+
+.size__instance__8x8 {
+    width: 10%;
+    height: inherit;
+    text-align: center;
     cursor: pointer;
 }
