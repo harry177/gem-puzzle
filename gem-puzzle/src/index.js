@@ -1,6 +1,6 @@
 import './style.css';
 
-alert("Ряд пунктов не доделал, очень много времени потратил на Canvas.. Буду благодарен если дадите пару дней на доделку!")
+alert("Ряд пунктов еще доделываю, очень много времени потратил на Canvas.. Думаю, за сегодня доделаю! Добавил: музыку, таймер, счетчик кликов, сообщение о победе. ")
 
 
 let firstCells = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0];
@@ -47,12 +47,22 @@ buttonsContainer.append(shuffleButton);
 shuffleButton.addEventListener('click', function() {
   mixAndRun();
   drawCells();
+  clicks = 0;
+  movesContainer.innerText = `Moves: ${clicks}`;
+  timeContainer.innerText = 'Time: 00:00';
 });
 
-let stopButton = document.createElement('button');
-stopButton.className = 'button';
-stopButton.innerText = 'Stop';
-buttonsContainer.append(stopButton);
+let soundButton = document.createElement('button');
+soundButton.className = 'button';
+soundButton.innerText = 'Sound';
+buttonsContainer.append(soundButton);
+soundButton.addEventListener('click', function() {
+  if (play) {
+    play = false;
+  } else {
+    play = true;
+  }
+})
 
 let saveButton = document.createElement('button');
 saveButton.className = 'button';
@@ -75,7 +85,7 @@ countBox.append(movesContainer);
 
 let timeContainer = document.createElement('div');
 timeContainer.className = 'time__container';
-timeContainer.innerText = '00 : 00';
+timeContainer.innerText = 'Time: 00:00';
 countBox.append(timeContainer);
 
 
@@ -209,7 +219,6 @@ sizeInstance__8x8.addEventListener('click', function() {
 window.onload = function() {
   mixAndRun();
   drawCells();
-  
 }
 
 
@@ -267,7 +276,7 @@ function onEvent(x, y) {
   getNullCell();
   move(x, y);
   drawCells();
-  winner();
+  victory();
   console.log(cells);
   console.log(clicks);
 }
@@ -287,7 +296,10 @@ function getNullCell(){
 
 
 
-// Moveing cells
+// Moveing cells + timer
+
+let timer;
+let second = 0;
 
 function move(x, y) {
 
@@ -300,29 +312,60 @@ function move(x, y) {
   if (canMoveVertical || canMoveHorizontal) {
     cells[nullCell.y][nullCell.x] = cells[y][x];
     cells[y][x] = 0;
-    
     clicks++;
-    console.log(clicks)
+    music();
   }
+  
+  movesContainer.innerText = `Moves: ${clicks}`;
+  if (clicks === 1) {
+    timer = setInterval(function () {
+    let seconds = ("0" + (second % 60)).slice(-2);
+    let minutes = ("0" + Math.floor(second / 60)).slice(-2);
+    timeContainer.innerText = "Time: " + minutes + ":" + seconds;
+    second++;
+  }, 1000);
+} else if (clicks === 0) {
+  timeContainer.innerText = 'Time: 00:00';
+}
+  
 };
 
 
 
-// Winner message
+// Victory message
 
 
-function winner() {
-
-  if (cells === [1, 2, 3, 4, 5, 6, 7, 8, 0] || cells === [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 0]]) {
-    alert ("Hooray! You solved the puzzle in ##:## and N moves!");
+function victory() {
+  var e = [[1,2,3], [4,5,6], [7,8,0]];
+  var res = true;
+  for (var i = 0; i < e.length; i++) {
+    for (var j = 0; j < e[i].length; j++) {
+      if (e[i][j] != cells[i][j]) {
+        res = false;
+      }
+    }
   }
-}
+  if (res == true) {
+    alert("Hooray! You solved the puzzle in ##:## and N moves!");
+  }
 
-winner();
+};
 
 
 
+// Sound of moves
 
-if (cells === [[1, 2, 3], [4, 5, 6], [7, 8, 0]]) {
-  alert('eeee');
+let play = true;
+
+function music() {
+
+  let audio = new Audio();
+
+ 
+  if (play) {
+
+    audio.src = './../assets/music/move-sound.mp3';
+
+    audio.play();
+  }
 }
