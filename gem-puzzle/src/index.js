@@ -1,7 +1,5 @@
 import './style.css';
 
-alert("Ряд пунктов еще доделываю, очень много времени потратил на Canvas.. Думаю, за сегодня доделаю! Добавил: музыку, таймер, счетчик кликов, сообщение о победе. ")
-
 
 let firstCells = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0];
 
@@ -32,6 +30,27 @@ mixAndRun();
 let clicks = 0;
 
 
+let shadowBody = document.createElement('div');
+shadowBody.className = 'shadow__body';
+document.body.append(shadowBody);
+shadowBody.addEventListener('click', function() {
+  shadowBody.classList.remove('show__shadow');
+  resultsDesk.classList.remove('show__results');
+})
+
+let resultsDesk = document.createElement('div');
+resultsDesk.className = 'results__desk';
+document.body.append(resultsDesk);
+resultsDesk.addEventListener('click', function() {
+  shadowBody.classList.remove('show__shadow');
+  resultsDesk.classList.remove('show__results');
+})
+
+let resultsList = document.createElement('ol');
+resultsList.className = 'results__list';
+resultsDesk.append(resultsList);
+
+
 let contentBox = document.createElement('div');
 contentBox.className = 'content__box';
 document.body.append(contentBox);
@@ -40,6 +59,7 @@ let buttonsContainer = document.createElement('div');
 buttonsContainer.className = 'buttons__container';
 contentBox.append(buttonsContainer);
 
+
 let shuffleButton = document.createElement('button');
 shuffleButton.className = 'button';
 shuffleButton.innerText = 'Shuffle';
@@ -47,14 +67,16 @@ buttonsContainer.append(shuffleButton);
 shuffleButton.addEventListener('click', function() {
   mixAndRun();
   drawCells();
+  clearInterval(timer);
   clicks = 0;
+  second = 0;
   movesContainer.innerText = `Moves: ${clicks}`;
   timeContainer.innerText = 'Time: 00:00';
 });
 
 let soundButton = document.createElement('button');
 soundButton.className = 'button';
-soundButton.innerText = 'Sound';
+soundButton.innerText = 'Sound on/off';
 buttonsContainer.append(soundButton);
 soundButton.addEventListener('click', function() {
   if (play) {
@@ -68,11 +90,19 @@ let saveButton = document.createElement('button');
 saveButton.className = 'button';
 saveButton.innerText = 'Save';
 buttonsContainer.append(saveButton);
+saveButton.addEventListener('click', function() {
+  saveResults();
+})
 
 let resultsButton = document.createElement('button');
 resultsButton.className = 'button';
 resultsButton.innerText = 'Results';
 buttonsContainer.append(resultsButton);
+resultsButton.addEventListener('click', function() {
+  resultsDesk.classList.add('show__results');
+  shadowBody.classList.add('show__shadow');
+  showResults();
+})
 
 let countBox = document.createElement('div');
 countBox.className = 'count__box';
@@ -91,8 +121,7 @@ countBox.append(timeContainer);
 
 
 let game = document.createElement('canvas');
-    game.width = 500;
-    game.height = 500;
+    
     game.className = 'canvas';
     contentBox.append(game);
   
@@ -100,6 +129,30 @@ let game = document.createElement('canvas');
   
     let columns = game.width / arrSize;
     let rows = game.height / arrSize;
+
+    let cellWidth = columns - 2;
+    let cellHeigth = rows - 2;
+
+
+    // Media queries
+
+let mediaBig = window.matchMedia('(min-width: 1281px)');    
+let mediaMiddle = window.matchMedia('(max-width: 1280px) and (min-width: 768px)');    
+let mediaSmall = window.matchMedia('(max-width: 767px)');
+
+
+if (mediaBig.matches) {
+  game.width = 540;
+  game.height = 540;
+} else if (mediaMiddle.matches) {
+  game.width = 460;
+  game.height = 460;
+} else if (mediaSmall.matches) {
+  game.width = 320;
+  game.height = 320;
+};
+
+
 
 
 
@@ -124,14 +177,18 @@ sizesBox.append(sizeInstance__3x3);
 sizeInstance__3x3.addEventListener('click', function() {
   firstCells = [1, 2, 3, 4, 5, 6, 7, 8, 0];
   arrSize = 3;
-  cellRadius = 83;
+  cellRadius = cellWidth / 2;
   columns = game.width / arrSize;
   rows = game.height / arrSize;
   context.clearRect(0, 0, game.width, game.height);
   mixAndRun();
   drawCells();
+  clearInterval(timer);
+  clicks = 0;
+  second = 0;
+  movesContainer.innerText = `Moves: ${clicks}`;
+  timeContainer.innerText = 'Time: 00:00';
   currSizeBox.innerText = '3x3';
-  console.log(cells);
 })
 
 let sizeInstance__4x4 = document.createElement('button');
@@ -141,12 +198,17 @@ sizesBox.append(sizeInstance__4x4);
 sizeInstance__4x4.addEventListener('click', function() {
   firstCells = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0];
   arrSize = 4;
-  cellRadius = 62;
+  cellRadius = cellWidth / 2;
   columns = game.width / arrSize;
   rows = game.height / arrSize;
   context.clearRect(0, 0, game.width, game.height);
   mixAndRun();
   drawCells();
+  clearInterval(timer);
+  clicks = 0;
+  second = 0;
+  movesContainer.innerText = `Moves: ${clicks}`;
+  timeContainer.innerText = 'Time: 00:00';
   currSizeBox.innerText = '4x4';
 })
 
@@ -157,12 +219,17 @@ sizesBox.append(sizeInstance__5x5);
 sizeInstance__5x5.addEventListener('click', function() {
   firstCells = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 0];
   arrSize = 5;
-  cellRadius = 50;
+  cellRadius = cellWidth / 2;
   columns = game.width / arrSize;
   rows = game.height / arrSize;
   context.clearRect(0, 0, game.width, game.height);
   mixAndRun();
   drawCells();
+  clearInterval(timer);
+  clicks = 0;
+  second = 0;
+  movesContainer.innerText = `Moves: ${clicks}`;
+  timeContainer.innerText = 'Time: 00:00';
   currSizeBox.innerText = '5x5';
 })
 
@@ -173,12 +240,17 @@ sizesBox.append(sizeInstance__6x6);
 sizeInstance__6x6.addEventListener('click', function() {
   firstCells = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 0];
   arrSize = 6;
-  cellRadius = 41.5;
+  cellRadius = cellWidth / 2;
   columns = game.width / arrSize;
   rows = game.height / arrSize;
   context.clearRect(0, 0, game.width, game.height);
   mixAndRun();
   drawCells();
+  clearInterval(timer);
+  clicks = 0;
+  second = 0;
+  movesContainer.innerText = `Moves: ${clicks}`;
+  timeContainer.innerText = 'Time: 00:00';
   currSizeBox.innerText = '6x6';
 })
 
@@ -189,12 +261,17 @@ sizesBox.append(sizeInstance__7x7);
 sizeInstance__7x7.addEventListener('click', function() {
   firstCells = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 0];
   arrSize = 7;
-  cellRadius = 35.5;
+  cellRadius = cellWidth / 2;
   columns = game.width / arrSize;
   rows = game.height / arrSize;
   context.clearRect(0, 0, game.width, game.height);
   mixAndRun();
   drawCells();
+  clearInterval(timer);
+  clicks = 0;
+  second = 0;
+  movesContainer.innerText = `Moves: ${clicks}`;
+  timeContainer.innerText = 'Time: 00:00';
   currSizeBox.innerText = '7x7';
 })
 
@@ -205,18 +282,41 @@ sizesBox.append(sizeInstance__8x8);
 sizeInstance__8x8.addEventListener('click', function() {
   firstCells = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 0];
   arrSize = 8;
-  cellRadius = 31.2;
+  cellRadius = cellWidth / 2;
   columns = game.width / arrSize;
   rows = game.height / arrSize;
   context.clearRect(0, 0, game.width, game.height);
   mixAndRun();
   drawCells();
+  clearInterval(timer);
+  clicks = 0;
+  second = 0;
+  movesContainer.innerText = `Moves: ${clicks}`;
+  timeContainer.innerText = 'Time: 00:00';
   currSizeBox.innerText = '8x8';
 })
 
 
 
 window.onload = function() {
+
+  columns = game.width / arrSize;
+  rows = game.height / arrSize;
+
+  cellWidth = columns - 2;
+  cellHeigth = rows - 2;
+  
+  if (mediaBig.matches) {
+    game.width = 540;
+    game.height = 540;
+  } else if (mediaMiddle.matches) {
+    game.width = 460;
+    game.height = 460;
+  } else if (mediaSmall.matches) {
+    game.width = 320;
+    game.height = 320;
+  };
+
   mixAndRun();
   drawCells();
 }
@@ -230,8 +330,8 @@ function drawCells() {
 
       let x = j*rows + 1;
       let y = i*columns + 1;
-      let cellWidth = columns - 5;
-      let cellHeigth = rows - 5;
+      cellWidth = columns - 2;
+      cellHeigth = rows - 2;
       
 
       if (cells[i][j] !== 0) {
@@ -262,11 +362,27 @@ game.onclick = function(e) {
   onEvent(x, y); 
 };
 
-game.ontouchend = function(e) {
-  let x = (e.touches[0].pageX - game.offsetLeft) / columns | 0;
-  let y = (e.touches[0].pageY - game.offsetTop)  / columns | 0;
-  onEvent(x, y);
-}; 
+// game.ontouchend = function(e) {
+  // let x = (e.touches[0].pageX - game.offsetLeft) / columns | 0;
+  // let y = (e.touches[0].pageY - game.offsetTop)  / columns | 0;
+  // onEvent(x, y);
+// }; 
+
+// game.draggable = function(e) {
+  // let x = (e.pageX - game.offsetLeft) / columns | 0;
+  // let y = (e.pageY - game.offsetTop)  / columns | 0;
+  // onEvent(x, y);
+// }; 
+
+// function drag() {
+  // for (let i = 0; i < cells.length; i++) {
+    // for (let j = 0; j < cells[i].length; j++) {
+      // game.draggable = true;
+    // }
+  // }
+// }
+
+// drag();
 
 
 
@@ -276,9 +392,19 @@ function onEvent(x, y) {
   getNullCell();
   move(x, y);
   drawCells();
-  victory();
-  console.log(cells);
-  console.log(clicks);
+  if (cells.length === 3) {
+  victory3x3();
+  } else if (cells.length === 4) {
+    victory4x4();
+  } else if (cells.length === 5) {
+    victory5x5();
+  } else if (cells.length === 6) {
+    victory6x6();
+  } else if (cells.length === 7) {
+    victory7x7();
+  } else if (cells.length === 8) {
+    victory8x8();
+  }
 }
 
 
@@ -301,6 +427,9 @@ function getNullCell(){
 let timer;
 let second = 0;
 
+let minutes;
+let seconds;
+
 function move(x, y) {
 
   let nullCell = getNullCell();
@@ -310,6 +439,8 @@ function move(x, y) {
   
   
   if (canMoveVertical || canMoveHorizontal) {
+    canMoveVertical.draggable;
+    canMoveHorizontal.draggable;
     cells[nullCell.y][nullCell.x] = cells[y][x];
     cells[y][x] = 0;
     clicks++;
@@ -319,8 +450,8 @@ function move(x, y) {
   movesContainer.innerText = `Moves: ${clicks}`;
   if (clicks === 1) {
     timer = setInterval(function () {
-    let seconds = ("0" + (second % 60)).slice(-2);
-    let minutes = ("0" + Math.floor(second / 60)).slice(-2);
+    seconds = ("0" + (second % 60)).slice(-2);
+    minutes = ("0" + Math.floor(second / 60)).slice(-2);
     timeContainer.innerText = "Time: " + minutes + ":" + seconds;
     second++;
   }, 1000);
@@ -335,7 +466,7 @@ function move(x, y) {
 // Victory message
 
 
-function victory() {
+function victory3x3() {
   var e = [[1,2,3], [4,5,6], [7,8,0]];
   var res = true;
   for (var i = 0; i < e.length; i++) {
@@ -346,9 +477,90 @@ function victory() {
     }
   }
   if (res == true) {
-    alert("Hooray! You solved the puzzle in ##:## and N moves!");
+    alert(`Hooray! You solved the puzzle in ${minutes}:${seconds} and ${clicks} moves!`);
+    localStorage.setItem(`Time: ${minutes}:${seconds}`, `Moves: ${clicks}` );
   }
+};
 
+
+function victory4x4() {
+  var e = [[1,2,3,4], [5,6,7,8], [9,10,11,12], [13,14,15,0]];
+  var res = true;
+  for (var i = 0; i < e.length; i++) {
+    for (var j = 0; j < e[i].length; j++) {
+      if (e[i][j] != cells[i][j]) {
+        res = false;
+      }
+    }
+  }
+  if (res == true) {
+    alert(`Hooray! You solved the puzzle in ${minutes}:${seconds} and ${clicks} moves!`);
+    localStorage.setItem(`Time: ${minutes}:${seconds}`, `Moves: ${clicks}` );
+  }
+};
+
+function victory5x5() {
+  var e = [[1,2,3,4,5], [6,7,8,9,10], [11,12,13,14,15], [16,17,18,19,20], [21,22,23,24,0]];
+  var res = true;
+  for (var i = 0; i < e.length; i++) {
+    for (var j = 0; j < e[i].length; j++) {
+      if (e[i][j] != cells[i][j]) {
+        res = false;
+      }
+    }
+  }
+  if (res == true) {
+    alert(`Hooray! You solved the puzzle in ${minutes}:${seconds} and ${clicks} moves!`);
+    localStorage.setItem(`Time: ${minutes}:${seconds}`, `Moves: ${clicks}` );
+  }
+};
+
+function victory6x6() {
+  var e = [[1,2,3,4,5,6], [7,8,9,10,11,12], [13,14,15,16,17,18], [19,20,21,22,23,24], [25,26,27,28,29,30], [31,32,33,34,35,0]];
+  var res = true;
+  for (var i = 0; i < e.length; i++) {
+    for (var j = 0; j < e[i].length; j++) {
+      if (e[i][j] != cells[i][j]) {
+        res = false;
+      }
+    }
+  }
+  if (res == true) {
+    alert(`Hooray! You solved the puzzle in ${minutes}:${seconds} and ${clicks} moves!`);
+    localStorage.setItem(`Time: ${minutes}:${seconds}`, `Moves: ${clicks}` );
+  }
+};
+
+function victory7x7() {
+  var e = [[1,2,3,4,5,6,7], [8,9,10,11,12,13,14], [15,16,17,18,19,20,21], [22,23,24,25,26,27,28], [29,30,31,32,33,34,35], [36,37,38,39,40,41,42], [43,44,45,46,47,48,0]];
+  var res = true;
+  for (var i = 0; i < e.length; i++) {
+    for (var j = 0; j < e[i].length; j++) {
+      if (e[i][j] != cells[i][j]) {
+        res = false;
+      }
+    }
+  }
+  if (res == true) {
+    alert(`Hooray! You solved the puzzle in ${minutes}:${seconds} and ${clicks} moves!`);
+    localStorage.setItem(`Time: ${minutes}:${seconds}`, `Moves: ${clicks}` );
+  }
+};
+
+function victory8x8() {
+  var e = [[1,2,3,4,5,6,7,8], [9,10,11,12,13,14,15,16], [17,18,19,20,21,22,23,24], [25,26,27,28,29,30,31,32], [33,34,35,36,37,38,39,40], [41,42,43,44,45,46,47,48], [49,50,51,52,53,54,55,56], [57,58,59,60,61,62,63,64]];
+  var res = true;
+  for (var i = 0; i < e.length; i++) {
+    for (var j = 0; j < e[i].length; j++) {
+      if (e[i][j] != cells[i][j]) {
+        res = false;
+      }
+    }
+  }
+  if (res == true) {
+    alert(`Hooray! You solved the puzzle in ${minutes}:${seconds} and ${clicks} moves!`);
+    localStorage.setItem(`Time: ${minutes}:${seconds}`, `Moves: ${clicks}` );
+  }
 };
 
 
@@ -358,14 +570,31 @@ function victory() {
 let play = true;
 
 function music() {
-
   let audio = new Audio();
 
- 
   if (play) {
-
     audio.src = './../assets/music/move-sound.mp3';
-
     audio.play();
   }
 }
+
+
+// Saving results
+
+function saveResults() {
+  localStorage.setItem(`Time: ${minutes}:${seconds}`, `Moves: ${clicks}` );
+}
+
+
+// Showing results
+
+function showResults() {
+  resultsList.replaceChildren();
+  let key;
+  for (let i = 0; i < localStorage.length; i++) {
+  key = localStorage.key(i);
+  resultsList.append(document.createElement('li'));
+  resultsList.childNodes[i].innerText = `${key} & ${localStorage.getItem(key)}`;
+  }
+}
+
