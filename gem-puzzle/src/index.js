@@ -1,5 +1,5 @@
 import './style.css';
-
+import movesound from '../assets/music/move-sound.mp3'
 
 let firstCells = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0];
 
@@ -573,7 +573,7 @@ function music() {
   let audio = new Audio();
 
   if (play) {
-    audio.src = './../assets/music/move-sound.mp3';
+    audio.src = movesound;
     audio.play();
   }
 }
