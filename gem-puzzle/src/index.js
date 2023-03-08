@@ -19,7 +19,6 @@ for (let i = 0; i < firstCells.length / arrSize; i++) {
   cells[i] = firstCells.slice(i*arrSize, i*arrSize + arrSize);
   cells.length = arrSize;
 }
-
 return cells;
 }
 
@@ -342,6 +341,7 @@ function drawCells() {
       context.textAlign = 'center';
       context.textBaseline = 'center';
       context.strokeText(cells[i][j], j*rows + cellRadius, i*columns + cellRadius);
+      context.draggable = true;
       
       } else {
         context.clearRect(x, y, cellWidth, cellHeigth);
@@ -362,27 +362,28 @@ game.onclick = function(e) {
   onEvent(x, y); 
 };
 
-// game.ontouchend = function(e) {
-  // let x = (e.touches[0].pageX - game.offsetLeft) / columns | 0;
-  // let y = (e.touches[0].pageY - game.offsetTop)  / columns | 0;
-  // onEvent(x, y);
-// }; 
+game.ontouchend = function(e) {
+  let x = (e.touches[0].pageX - game.offsetLeft) / columns | 0;
+  let y = (e.touches[0].pageY - game.offsetTop)  / columns | 0;
+  onEvent(x, y);
+}; 
 
-// game.draggable = function(e) {
-  // let x = (e.pageX - game.offsetLeft) / columns | 0;
-  // let y = (e.pageY - game.offsetTop)  / columns | 0;
-  // onEvent(x, y);
-// }; 
+/* game.draggable = function(e) {
+  let x = (e.pageX - game.offsetLeft) / columns | 0;
+  let y = (e.pageY - game.offsetTop)  / columns | 0;
+  cells.draggable = true;
+  onEvent(x, y);
+ }; */
 
-// function drag() {
-  // for (let i = 0; i < cells.length; i++) {
-    // for (let j = 0; j < cells[i].length; j++) {
-      // game.draggable = true;
-    // }
-  // }
-// }
+/* function drag() {
+  for (let i = 0; i < cells.length; i++) {
+    for (let j = 0; j < cells[i].length; j++) {
+      cells.draggable = true;
+     }
+   }
+} 
 
-// drag();
+ drag(); */
 
 
 
